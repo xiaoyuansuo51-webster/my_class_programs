@@ -1,0 +1,124 @@
+--DROP only needed if created already
+--DROP TABLE XS_OrderItem; 
+--DROP TABLE XS_Order; 
+--DROP TABLE XS_Employee; 
+--DROP TABLE XS_Customer; 
+--DROP TABLE XS_Book; 
+
+-- Create table for Book
+CREATE TABLE XS_Book 
+(
+    ISBN VARCHAR(13) NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    author VARCHAR(100) NOT NULL,
+    price DECIMAL(6, 2) NOT NULL,
+    stock_quantity INT NOT NULL, 
+    PRIMARY KEY (ISBN)
+);
+
+-- Create table for Customer
+CREATE TABLE XS_Customer 
+(
+    customer_id INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    address VARCHAR(200),
+    phone VARCHAR(15),
+    email VARCHAR(100) UNIQUE, 
+    PRIMARY KEY (customer_id)
+);
+
+-- Create table for Employee
+CREATE TABLE XS_Employee 
+(
+    employee_id int NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    position VARCHAR(50) NOT NULL,
+    contact_details VARCHAR(150), 
+    PRIMARY KEY (employee_id)
+);
+
+-- Create table for Order
+CREATE TABLE XS_Order 
+(
+    order_id VARCHAR(5) NOT NULL,
+    customer_id INT REFERENCES XS_Customer(customer_id),
+    employee_id INT REFERENCES XS_Employee(employee_id),
+    order_date DATE NOT NULL,
+    total_amount DECIMAL(8, 2) NOT NULL, 
+    PRIMARY KEY (order_id)
+);
+
+-- Create table for XS_OrderItem
+CREATE TABLE XS_OrderItem 
+(
+    order_item_id VARCHAR(6) NOT NULL, 
+    order_id VARCHAR(5) REFERENCES XS_Order(order_id),
+    ISBN VARCHAR(13) REFERENCES XS_Book(ISBN),
+    quantity INT NOT NULL, 
+    PRIMARY KEY (order_item_id)
+);
+
+INSERT INTO XS_Book (ISBN, title, author, price, stock_quantity) VALUES
+('9780131103627', 'The C Programming Language', 'Brian Kernighan', 40.50, 100); 
+INSERT INTO XS_Book (ISBN, title, author, price, stock_quantity) VALUES
+('9780132350884', 'Clean Code', 'Robert Martin', 30.99, 75);
+INSERT INTO XS_Book (ISBN, title, author, price, stock_quantity) VALUES
+('9781491950357', 'Designing Data-Intensive Applications', 'Martin Kleppmann', 55.99, 50);
+INSERT INTO XS_Book (ISBN, title, author, price, stock_quantity) VALUES
+('9780262033848', 'Introduction to Algorithms', 'Thomas H. Cormen', 85.00, 25);
+INSERT INTO XS_Book (ISBN, title, author, price, stock_quantity) VALUES
+('9780131101630', 'The Art of Computer Programming', 'Donald Knuth', 90.00, 10);
+
+-- Insert data into Customer table
+INSERT INTO XS_Customer ( customer_id, name, address, phone, email) VALUES
+(101, 'John Doe', '123 Elm St, Springfield', '555-1234', 'johndoe@example.com');
+INSERT INTO XS_Customer (customer_id, name, address, phone, email) VALUES
+(102, 'Jane Smith', '456 Maple Ave, Springfield', '555-5678', 'janesmith@example.com');
+INSERT INTO XS_Customer (customer_id, name, address, phone, email) VALUES
+(103, 'Bob Johnson', '789 Oak Blvd, Springfield', '555-8765', 'bobjohnson@example.com');
+INSERT INTO XS_Customer (customer_id, name, address, phone, email) VALUES
+(104, 'Alice Davis', '321 Pine Ln, Springfield', '555-4321', 'alicedavis@example.com');
+INSERT INTO XS_Customer (customer_id, name, address, phone, email) VALUES
+(105, 'Charlie Brown', '654 Cedar Ct, Springfield', '555-9876', 'charliebrown@example.com');
+
+-- Insert data into Employee table
+INSERT INTO XS_Employee (employee_id, name, position, contact_details) VALUES
+(1, 'Emily Stone', 'Manager', 'emily.stone@bookstore.com'); 
+INSERT INTO XS_Employee (employee_id, name, position, contact_details) VALUES
+(2, 'David Miller', 'Cashier', 'david.miller@bookstore.com');
+INSERT INTO XS_Employee (employee_id, name, position, contact_details) VALUES
+(3, 'Sophia Harris', 'Sales Associate', 'sophia.harris@bookstore.com'); 
+INSERT INTO XS_Employee (employee_id, name, position, contact_details) VALUES
+(4, 'Lucas Wright', 'Stock Clerk', 'lucas.wright@bookstore.com'); 
+INSERT INTO XS_Employee (employee_id, name, position, contact_details) VALUES
+(5, 'Grace Lee', 'Assistant Manager', 'grace.lee@bookstore.com');
+
+-- Insert data into Order table
+INSERT INTO XS_Order (order_id, customer_id, employee_id, order_date, total_amount) VALUES
+('o1', 102, 1, TO_DATE('2024-09-25', 'YYYY-MM-DD'), 120.50); 
+INSERT INTO XS_Order (order_id, customer_id, employee_id, order_date, total_amount) VALUES
+('o2', 102, 2, TO_DATE('2024-09-26', 'YYYY-MM-DD'), 45.99); 
+INSERT INTO XS_Order (order_id, customer_id, employee_id, order_date, total_amount) VALUES
+('o3', 103, 3, TO_DATE('2024-09-27', 'YYYY-MM-DD'), 99.99); 
+INSERT INTO XS_Order (order_id, customer_id, employee_id, order_date, total_amount) VALUES
+('o4', 101, 1, TO_DATE('2024-09-28', 'yyyy-MM-dd'), 85.00); 
+INSERT INTO XS_Order (order_id, customer_id, employee_id, order_date, total_amount) VALUES
+('o5', 105, 4, TO_DATE('2024-09-29', 'yyyy-MM-dd'), 30.99);
+
+-- Insert data into OrderItem table
+INSERT INTO XS_OrderItem (order_item_id, order_id, ISBN, quantity) VALUES
+('oi1', 'o1', '9780131103627', 1); 
+INSERT INTO XS_OrderItem (order_item_id, order_id, ISBN, quantity) VALUES
+('oi2', 'o1', '9780132350884', 2);
+INSERT INTO XS_OrderItem (order_item_id, order_id, ISBN, quantity) VALUES
+('oi3', 'o2', '9780132350884', 1);
+INSERT INTO XS_OrderItem (order_item_id, order_id, ISBN, quantity) VALUES
+('oi4', 'o3', '9781491950357', 1);
+INSERT INTO XS_OrderItem (order_item_id, order_id, ISBN, quantity) VALUES
+('oi5', 'o4', '9780262033848', 1); 
+INSERT INTO XS_OrderItem (order_item_id, order_id, ISBN, quantity) VALUES
+('oi6', 'o5', '9780131101630', 1);
+
+
+
+
