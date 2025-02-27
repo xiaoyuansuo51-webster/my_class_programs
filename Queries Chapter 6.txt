@@ -1,0 +1,150 @@
+CREATE TABLE Jukic_department (
+    deptID CHAR(2) NOT NULL PRIMARY KEY,
+    deptLocation VARCHAR(50) NOT NULL
+);
+CREATE TABLE Jukic_employee (
+    empid CHAR(4) NOT NULL,
+    empname CHAR(20),
+    deptid CHAR(2),
+    PRIMARY KEY (empid),
+    FOREIGN KEY (deptid) REFERENCES Jukic_department(deptid) ON DELETE CASCADE
+);
+CREATE TABLE Jukic_employee (
+    empid CHAR(4) NOT NULL,
+    empname CHAR(20),
+    deptid CHAR(2),
+    PRIMARY KEY (empid),
+    FOREIGN KEY (deptid) REFERENCES Jukic_department(deptid) ON DELETE SET NULL
+);
+
+--default values
+CREATE TABLE test_employees 
+(
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    City varchar(255) DEFAULT 'St.Louis'
+);
+
+--index
+​CREATE INDEX employee_index ON Jukic_employee(empname);
+DROP INDEX employee_index;
+
+--check and delete set null
+
+CREATE TABLE Jukic_employee (
+    empid CHAR(4) NOT NULL,
+    age INT check (age > 0 AND age < 80),
+    empname CHAR(20),
+    deptid CHAR(2),
+    PRIMARY KEY (empid),
+    FOREIGN KEY (deptid) REFERENCES Jukic_department(deptid) ON DELETE SET NULL
+);
+CREATE SEQUENCE emp_seq
+START WITH 1 
+INCREMENT BY 1; 
+
+INSERT INTO Jukic_department (deptLocation, deptid)
+VALUES ('Webster Groves, 'D1');
+
+INSERT INTO Jukic_department (deptLocation, deptid)
+VALUES ('st. louis', 'D2');
+
+INSERT INTO Jukic_employee (empid, empname, deptid)
+VALUES (emp_seq.NEXTVAL, 'Jane Smith', 'D2');
+
+INSERT INTO Jukic_employee (empid, empname, deptid)
+VALUES (emp_seq.NEXTVAL, 'Jane Smith', 'D2');
+
+SELECT * FROM Jukic_employee;
+
+--useful links: 
+--https://youtu.be/RccSMZ_7ve4
+
+
+CREATE TABLE club (
+    key INT PRIMARY KEY,
+    name varchar(20) UNIQUE
+);
+
+CREATE SEQUENCE key
+INCREMENT BY 1
+START WITH 1;
+
+-- Insert the first club
+INSERT INTO club (key, name)
+VALUES (key.NEXTVAL, 'Chess Club');
+
+-- Insert the second club
+INSERT INTO club (key, name)
+VALUES (key.NEXTVAL, 'Drama Club');
+
+-- Insert the third club
+INSERT INTO club (key, name)
+VALUES (key.NEXTVAL, 'Science Club');
+
+
+CREATE TABLE band
+(
+    bandkey INT PRIMARY KEY,
+    name varchar(20) UNIQUE
+);
+
+CREATE SEQUENCE bandkey
+INCREMENT BY 1
+START WITH 1;
+
+-- Insert the first band
+INSERT INTO band (bandkey, name)
+VALUES (bandkey.NEXTVAL, 'The Beatles');
+
+-- Insert the second band
+INSERT INTO band (bandkey, name)
+VALUES (bandkey.NEXTVAL, 'Led Zeppelin');
+
+-- Insert the third band
+INSERT INTO band (bandkey, name)
+VALUES (bandkey.NEXTVAL, 'Pink Floyd');
+
+CREATE TABLE concert
+(
+    concertkey INT PRIMARY KEY,
+    club_name VARCHAR(20) REFERENCES club(name) ON DELETE CASCADE,
+    band_name VARCHAR(20) REFERENCES band(name) ON DELETE CASCADE,
+    concert_date DATE
+);
+
+CREATE SEQUENCE concertkey
+INCREMENT BY 1
+START WITH 1;
+
+INSERT INTO concert (concertkey, club_name, band_name, concert_date)
+VALUES (concertkey.NEXTVAL, 'Chess Club', 'The Beatles', TO_DATE('2024-05-15', 'YYYY-MM-DD'));
+
+INSERT INTO concert (concertkey, club_name, band_name, concert_date)
+VALUES (concertkey.NEXTVAL, 'Drama Club', 'Led Zeppelin', TO_DATE('2024-06-10', 'YYYY-MM-DD'));
+
+INSERT INTO concert (concertkey, club_name, band_name, concert_date)
+VALUES (concertkey.NEXTVAL, 'Science Club', 'Pink Floyd', TO_DATE('2024-07-25', 'YYYY-MM-DD'));
+
+select * from concert
+
+
+
+--- The following works for SQL management studio but not on APEX 
+--- you cannot use "delete set default" on APEX
+--drop table testProducts;
+--drop table testOrders;
+CREATE TABLE testProducts
+(
+ProdID INT DEFAULT 1000 primary key,
+ProdName VARCHAR(20)
+);
+
+CREATE TABLE testOrders
+(
+OrderID INT PRIMARY KEY,
+ProdID INT DEFAULT 1000,
+FOREIGN KEY (ProdID) REFERENCES testProducts(ProdID) ON DELETE SET DEFAULT
+);
